@@ -12,6 +12,11 @@ game.PlayerEntity = me.Entity.extend({
         }]);
     
          this.body.setVelocity(5, 20);
+         
+         this.renderable.addAnimation("idle", [78]);
+         this.renderable.addAnimation("walk", [117, 118, 119, 120, 121, 122, 123, 124, 125], 80);
+         
+         this.renderable.setCurrentAnimation("idle");
         
     },
     
@@ -21,6 +26,7 @@ game.PlayerEntity = me.Entity.extend({
             //setVelocity is being mutiplied by me.timer.tick;
             //me.timer.tick is making the character move smoothly
             this.body.vel.x += this.body.accel.x * me.timer.tick;
+            this.renderable.setCurrentAnimation("walk");
         }else{
             this.body.vel.x = 0;
         }
