@@ -40,9 +40,14 @@
     <property name="EnemyBase" value=""/>
    </properties>
   </object>
-  <object x="143" y="421" width="65" height="140">
+  <object name="PlayerBase" x="143" y="421" width="65" height="140">
    <properties>
     <property name="PlayerBase" value=""/>
+   </properties>
+  </object>
+  <object name="EnemyBase" x="909" y="420" width="69" height="139">
+   <properties>
+    <property name="EnemyBase" value=""/>
    </properties>
   </object>
  </objectgroup>
