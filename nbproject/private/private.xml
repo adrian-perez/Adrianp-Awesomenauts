@@ -5,9 +5,9 @@
         <group>
             <file>file:/C:/xampp/htdocs/AdrianP-Awesomenauts/js/screens/play.js</file>
             <file>file:/C:/xampp/htdocs/AdrianP-Awesomenauts/js/game.js</file>
-            <file>file:/C:/xampp/htdocs/AdrianP-Awesomenauts/data/img/tower_round.svg.png</file>
             <file>file:/C:/xampp/htdocs/AdrianP-Awesomenauts/js/resources.js</file>
             <file>file:/C:/xampp/htdocs/AdrianP-Awesomenauts/js/entities/entities.js</file>
+            <file>file:/C:/xampp/htdocs/AdrianP-Awesomenauts/js/screens/title.js</file>
         </group>
     </open-files>
 </project-private>
