@@ -44,6 +44,7 @@ game.PlayerEntity = me.Entity.extend({
          // keeps track of the direction the chracter is going
         this.facing = "right";
         this.dead = false;
+        this.attacking = false;
     },
     
     addAnimation: function(){
@@ -58,34 +59,11 @@ game.PlayerEntity = me.Entity.extend({
     update: function(delta) {
         this.now = new Date().getTime();
 
-        if (this.health <= 0) {
-            this.dead = true;
-        }
-
-        if (me.input.isKeyPressed("right")) {
-
-            // setting the position of X 
-            //setVelocity is being mutiplied by me.timer.tick;
-            //me.timer.tick is making the character move smoothly
-            this.body.vel.x += this.body.accel.x * me.timer.tick;
-            this.facing = "right";
-            this.flipX(true);
-
-        } else if (me.input.isKeyPressed("left")) {
-            this.facing = "left";
-            this.body.vel.x -= this.body.accel.x * me.timer.tick;
-            this.flipX(false);
-        } else {
-            this.body.vel.x = 0;
-        }
-
-        if (me.input.isKeyPressed("jump") && !this.jumping && !this.falling) {
-            this.jumping = true;
-            this.body.vel.y -= this.body.accel.y * me.timer.tick;
-
-        }
-
-        if (me.input.isKeyPressed("attack")) {
+        this.dead = checkIfDead();
+        
+        this.checkKeyPressesAndMove();
+        
+        if(this.attacking){
             if (!this.renderable.isCurrentAnimation("attack")) {
                 //this code is for the character to attack
                 this.renderable.setCurrentAnimation("attack", "idle");
@@ -96,7 +74,6 @@ game.PlayerEntity = me.Entity.extend({
         }
         else if (this.body.vel.x !== 0 && !this.renderable.isCurrentAnimation("attack")) {
             if (!this.renderable.isCurrentAnimation("walk")) {
-                this.renderable.setCurrentAnimation("walk");
             }
         } else if (!this.renderable.isCurrentAnimation("attack")) {
             this.renderable.setCurrentAnimation("idle");
@@ -110,6 +87,53 @@ game.PlayerEntity = me.Entity.extend({
         this._super(me.Entity, "update", [delta]);
         return true;
     },
+    
+    checkIfDead: function(){
+        
+        if (this.health <= 0) {
+            return true;
+        }
+        return false;
+    },
+    
+    checkKeyPressesAndMove: function(){
+        
+        if (me.input.isKeyPressed("right")) {
+            this.moveRight();
+        } else if (me.input.isKeyPressed("left")) {
+          this.moveLeft();
+        } else {
+            this.body.vel.x = 0;
+        }
+
+        if (me.input.isKeyPressed("jump") && !this.jumping && !this.falling) {
+            this.jump();
+
+        }
+       
+       this.attacking = me.input.isKeyPressed("attack");
+    },
+    
+    moveRight: function(){
+         // setting the position of X 
+            //setVelocity is being mutiplied by me.timer.tick;
+            //me.timer.tick is making the character move smoothly
+            this.body.vel.x += this.body.accel.x * me.timer.tick;
+            this.facing = "right";
+            this.flipX(true);
+    },
+    
+    moveLeft: function(){
+            this.facing = "left";
+            this.body.vel.x -= this.body.accel.x * me.timer.tick;
+            this.flipX(false);
+    },
+    
+    jump: function(){
+            this.jumping = true;
+            this.body.vel.y -= this.body.accel.y * me.timer.tick;
+    },
+    
     collideHandler: function(response) {
         if (response.b.type === 'EnemyBaseEntity') {
             var ydif = this.pos.y - response.b.pos.y;
