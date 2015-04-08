@@ -58,32 +58,11 @@ game.PlayerEntity = me.Entity.extend({
     
     update: function(delta) {
         this.now = new Date().getTime();
-
         this.dead = checkIfDead();
-        
         this.checkKeyPressesAndMove();
-        
-        if(this.attacking){
-            if (!this.renderable.isCurrentAnimation("attack")) {
-                //this code is for the character to attack
-                this.renderable.setCurrentAnimation("attack", "idle");
-                // cuurent animation to attack
-                //goes back to idle animation
-                this.renderable.setAnimationFrame();
-            }
-        }
-        else if (this.body.vel.x !== 0 && !this.renderable.isCurrentAnimation("attack")) {
-            if (!this.renderable.isCurrentAnimation("walk")) {
-            }
-        } else if (!this.renderable.isCurrentAnimation("attack")) {
-            this.renderable.setCurrentAnimation("idle");
-        }
-
-
-
+        this.setAnimation();  
         me.collision.check(this, true, this.collideHandler.bind(this), true);
         this.body.update(delta);
-
         this._super(me.Entity, "update", [delta]);
         return true;
     },
@@ -134,9 +113,34 @@ game.PlayerEntity = me.Entity.extend({
             this.body.vel.y -= this.body.accel.y * me.timer.tick;
     },
     
+    setAnimation: function(){
+          if(this.attacking){
+            if (!this.renderable.isCurrentAnimation("attack")) {
+                //this code is for the character to attack
+                this.renderable.setCurrentAnimation("attack", "idle");
+                // cuurent animation to attack
+                //goes back to idle animation
+                this.renderable.setAnimationFrame();
+            }
+        }
+        else if (this.body.vel.x !== 0 && !this.renderable.isCurrentAnimation("attack")) {
+            if (!this.renderable.isCurrentAnimation("walk")) {
+            }
+        } else if (!this.renderable.isCurrentAnimation("attack")) {
+            this.renderable.setCurrentAnimation("idle");
+        }
+    },
+    
     collideHandler: function(response) {
         if (response.b.type === 'EnemyBaseEntity') {
-            var ydif = this.pos.y - response.b.pos.y;
+          this.collideWithEnemyBase();
+        } else if (response.b.type === 'EnemyCreep') {
+          this.collideWithEnemyCreep(response);
+        }
+    },
+    
+    collideWithEnemyBase: function(response){
+           var ydif = this.pos.y - response.b.pos.y;
             var xdif = this.pos.x - response.b.pos.x;
 
             console.log("xdif " + xdif + "ydif " + ydif);
@@ -153,11 +157,18 @@ game.PlayerEntity = me.Entity.extend({
                 this.lastHit = this.now;
                 response.b.loseHealth(game.data.playerAttack);
             }
-        } else if (response.b.type === 'EnemyCreep') {
+    },
+    
+    collideWithEnemyCreep: function(response){
             var xdif = this.pos.x - response.b.pos.x;
             var ydif = this.pos.y - response.b.pos.y;
 
-            if (xdif > 0) {
+           this.stopMovement(xdif);
+
+           this.checkAttack(xdif, ydif, response);
+       },
+          stopMovement: function(xdif){
+                  if (xdif > 0) {
                 this.pos.x = this.pos.x + 1;
                 if (this.facing === "left") {
                     this.body.vel.x = 0;
@@ -168,8 +179,10 @@ game.PlayerEntity = me.Entity.extend({
                     this.body.vel.x = 0;
                 }
             }
-
-            if (this.renderable.isCurrentAnimation("attack") && this.now - this.lastHit >= game.data.playerAttackTimer
+          },
+          
+          checkAttack: function(xdif, ydif, response){
+                        if (this.renderable.isCurrentAnimation("attack") && this.now - this.lastHit >= game.data.playerAttackTimer
                     && (Math.abs(ydif) <= 40) &&
                     (((xdif > 0) && this.facing === "left") || ((xdif < 0) && this.facing === "right"))
                     ) {
@@ -182,10 +195,8 @@ game.PlayerEntity = me.Entity.extend({
                 }
 
                 response.b.loseHealth(game.data.playerAttack);
-            }
-        }
-    }
-
+            }   
+          }
 });
 
 
