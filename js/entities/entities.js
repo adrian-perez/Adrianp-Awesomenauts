@@ -1,6 +1,6 @@
 game.PlayerEntity = me.Entity.extend({
     init: function(x, y, settings) {
-        this.setSuper();
+        this.setSuper(x, y);
         this.setPlayerTimers();
         this.setAttributes();
         this.type = "PlayerEntity";
@@ -13,7 +13,7 @@ game.PlayerEntity = me.Entity.extend({
         this.renderable.setCurrentAnimation("idle");
     },
     
-    setSuper: function() {
+    setSuper: function(x, y) {
         this._super(me.Entity, 'init', [x, y, {
                 image: "player",
                 width: 64,
@@ -58,7 +58,7 @@ game.PlayerEntity = me.Entity.extend({
     
     update: function(delta) {
         this.now = new Date().getTime();
-        this.dead = checkIfDead();
+        this.dead = this.checkIfDead();
         this.checkKeyPressesAndMove();
         this.setAnimation();  
         me.collision.check(this, true, this.collideHandler.bind(this), true);
@@ -165,9 +165,12 @@ game.PlayerEntity = me.Entity.extend({
 
            this.stopMovement(xdif);
 
-           this.checkAttack(xdif, ydif, response);
+            if(this.checkAttack(xdif, ydif)){
+               this.hitCreep(response);           
+           };
        },
-          stopMovement: function(xdif){
+       
+    stopMovement: function(xdif){
                   if (xdif > 0) {
                 this.pos.x = this.pos.x + 1;
                 if (this.facing === "left") {
@@ -181,22 +184,27 @@ game.PlayerEntity = me.Entity.extend({
             }
           },
           
-          checkAttack: function(xdif, ydif, response){
+    checkAttack: function(xdif, ydif, response){
                         if (this.renderable.isCurrentAnimation("attack") && this.now - this.lastHit >= game.data.playerAttackTimer
                     && (Math.abs(ydif) <= 40) &&
                     (((xdif > 0) && this.facing === "left") || ((xdif < 0) && this.facing === "right"))
                     ) {
                 this.lastHit = this.now;
                 // if the creep's health is less than our attack, execute code in if statement
-                if (response.b.health <= game.data.playerAttack) {
+                return true;
+            }   
+            return false;
+          },
+          
+    hitCreep: function(response){
+             if (response.b.health <= game.data.playerAttack) {
                     // adds 1 gold for evvery creep killed 
                     game.data.gold += 1;
                     console.log("Current gold:: " + game.data.gold);
                 }
 
                 response.b.loseHealth(game.data.playerAttack);
-            }   
-          }
+    }
 });
 
 
