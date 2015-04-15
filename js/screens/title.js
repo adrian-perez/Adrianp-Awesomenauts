@@ -28,6 +28,7 @@ game.TitleScreen = me.ScreenObject.extend({
                       me.save.remove('exp2');
                       me.save.remove('exp3');
                       me.save.remove('exp4');
+                      me.save.add({exp: 0, exp1: 0, exp2: 0, exp3: 0, exp4: 0});    
                       me.state.change(me.state.PLAY);
                     }
                 })));
@@ -48,8 +49,12 @@ game.TitleScreen = me.ScreenObject.extend({
                     }, 
                     
                     newGame: function(){
-                      me.input.releasePointerEvent('pointerdown', this);
-                                         
+                        game.data.exp = me.save.exp;
+                        game.data.exp = me.save.exp1;
+                        game.data.exp = me.save.exp2;
+                        game.data.exp = me.save.exp3;
+                        game.data.exp = me.save.exp4;
+                      me.input.releasePointerEvent('pointerdown', this);                   
                       me.state.change(me.state.PLAY);
                     }
                 })));
