@@ -131,13 +131,11 @@ game.PlayerEntity = me.Entity.extend({
         var xdif = this.pos.x - response.b.pos.x;
 
 //            console.log("xdif " + xdif + "ydif " + ydif);
-
-        if (xdif > -35 && this.facing === 'right' && (xdif > 0)) {
+        console.log(xdif + this.facing);
+        if (xdif > -35 && this.facing === 'right' && (xdif < 0)) {
             this.body.vel.x = 0;
-            this.pos.x = this.pos.x - 1;
         } else if (xdif < 70 && this.facing === 'left' && xdif > 0) {
             this.body.vel.x = 0;
-            // this.pos.x = this.pos.x + 1;
         }
 
         if (this.renderable.isCurrentAnimation("attack") && this.now - this.lastHit >= game.data.playerAttackTimer) {

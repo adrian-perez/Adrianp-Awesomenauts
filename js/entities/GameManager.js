@@ -55,7 +55,7 @@ game.ExperienceManager = Object.extend({
     
     update: function(){
         if(game.data.win === true && !this.gameover){
-            this.gameover(true);
+            this.gameOver(true);
         }else if(game.data.win === false && !this.gameOver){
            this.gameOver(false);
         }
@@ -97,6 +97,8 @@ game.SpendGold = Object.extend({
             this.stopBuying();
         }
         
+       this.checkBuyKeys();
+        
        return true;
     },
     
@@ -129,10 +131,16 @@ game.SpendGold = Object.extend({
             },
             draw: function(renderer) {
                 this.font.draw(renderer.getContext(), "PRESS F1-F6 TO BUY, F5 TO SKIP", this.pos.x, this.pos.y);
+                this.font.draw(renderer.getContext(), "Skill1: Increase Damage. Current Level: " + game.data.skill1 + " Cost: " + ((game.data.skill1+1)*10), this.pos.x, this.pos.y);
+                this.font.draw(renderer.getContext(), "Skill2: Run Faster! CurrentLevel: " + game.data.skill2 + " Cost: " + ((game.data.skill2+1)*10), this.pos.x, this.pos.y);
+                this.font.draw(renderer.getContext(), "Skill3: Increase Health! CurrentLevel: " + game.data.skill3 + " Cost: " + ((game.data.skill3+1)*10), this.pos.x, this.pos.y);
+                this.font.draw(renderer.getContext(), "Q Ability: Speed Burst. CurrentLevel: " + game.data.ability1 + " Cost: " + ((game.data.ability1+1)*10), this.pos.x, this.pos.y);
+                this.font.draw(renderer.getContext(), "W Ability: Eat your crrep for health: " + game.data.ability2 + " Cost: " + ((game.data.ability2+1)*10), this.pos.x, this.pos.y);
+                this.font.draw(renderer.getContext(), "E Ability: Throw your spear: " + game.data.ability3 + " Cost: " + ((game.data.ability3+1)*10), this.pos.x, this.pos.y);v
               
             }
 
-        })));
+        }));
     me.game.world.addChild();
     },
     
@@ -147,6 +155,10 @@ game.SpendGold = Object.extend({
         me.input.unbindKey(me.input.KEY.F4, "F4", true);
         me.input.unbindKey(me.input.KEY.F5, "F5", true);
         me.input.unbindKey(me.input.KEY.F6, "F6", true);
+    },
+    
+    checkBuyKeys: function(){
+        
     }
      
 });
