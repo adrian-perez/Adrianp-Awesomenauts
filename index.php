@@ -55,6 +55,7 @@ require_once("php/controller/create-db.php");
         <script type="text/javascript" src="js/gamemanagers/GameManager.js"></script>
         <script type="text/javascript" src="js/entities/EnemyCreep.js"></script>
         <script type="text/javascript" src="js/entities/HUD.js"></script>
+        <script type="text/javascript" src="js/entities/SpearThrow.js"></script>
         <script type="text/javascript" src="js/gamemanagers/GameTimerManager.js"></script>
         <script type="text/javascript" src="js/gamemanagers/SpendGold.js"></script>
         <script type="text/javascript" src="js/gamemanagers/HeroDeathManager.js"></script>
@@ -69,7 +70,6 @@ require_once("php/controller/create-db.php");
         <script type="text/javascript">
             window.onReady(function onReady() {
                 game.onload();
-
                 // Mobile browser hacks
                 if (me.device.isMobile && !navigator.isCocoonJS) {
                     // Prevent the webview from moving on a swipe
@@ -78,61 +78,58 @@ require_once("php/controller/create-db.php");
                         window.scroll(0, 0);
                         return false;
                     }, false);
-
                     // Scroll away mobile GUI
                     (function() {
                         window.scrollTo(0, 1);
                         me.video.onresize(null);
                     }).defer();
-
                     me.event.subscribe(me.event.WINDOW_ONRESIZE, function(e) {
-                            window.scrollTo(0, 1);
-                        });
-                    }
-                });
-        </script>
+                        window.scrollTo(0, 1);
+                    });
+                }
+            });</script>
 
         <script>
-                $("#mainmenu").bind("click", function()
-                        me.state.change(me.state.MENU);
-                        );
-                        $("#register").bind("click", function()
-                        $.ajax( {
-                            type: "POST",
-                            url: "php/controller/create-user.php",
-                            data: {
-                                username: $('username').val(),
-                                password: $('password').val()
-                            },
-                            dataType: "text"
-                        })
+            $("#mainmenu").bind("click", function() {
+                me.state.change(me.state.MENU);
+            });
+            $("#register").bind("click", function() {
+                $.ajax({
+                    type: "POST",
+                    url: "php/controller/create-user.php",
+                    data: {
+                        username: $('username').val(),
+                        password: $('password').val()
+                    },
+                    dataType: "text"
+                })
 
                         .success(function(response) {
-                            if(response==="true"){
+                            if (response === "true") {
                                 me.state.change(me.state.PLAY);
-                            }else{
+                            } else {
                                 alert(response);
                             }
                         })
-                .fail(function(response){
-                    alert("Fail");
-                });
+                        .fail(function(response) {
+                            alert("Fail");
+                        });
             });
-             $("load").bind("click", function()
-                        $.ajax( {
-                            type: "POST",
-                            url: "php/controller/login-user.php",
-                            data: {
-                                username: $('username').val(),
-                                password: $('password').val()
-                            },
-                            dataType: "text"
-                        })
+            $("load").bind("click", function() {
+                $.ajax({
+                    type: "POST",
+                    url: "php/controller/login-user.php",
+                    data: {
+                        username: $('username').val(),
+                        password: $('password').val()
+                    },
+                    dataType: "text"
+                })
 
                         .success(function(response) {
-                            if(response==="Invaild username and password"){
+                            if (response === "Invaild username and password") {
                                 me.state.change(me.state.PLAY);
-                            }else{
+                            } else {
                                 var data = jQuery.parseJSON(response);
                                 game.data.exp = data["exp"];
                                 game.data.exp1 = data["exp1"];
@@ -142,9 +139,9 @@ require_once("php/controller/create-db.php");
                                 me.state.change(me.state.PLAY);
                             }
                         })
-                .fail(function(response){
-                    alert("Fail");
-                });
+                        .fail(function(response) {
+                            alert("Fail");
+                        });
             });
         </script>
     </body>
