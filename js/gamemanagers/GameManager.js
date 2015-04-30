@@ -7,9 +7,11 @@ game.ExperienceManager = Object.extend({
         if (game.data.win === true && !this.gameover) {
             this.gameOver(true);
             alert("YOU WON!");
+            // when the enemy base is destroyed, this message will appear
         } else if (game.data.win === false && !this.gameOver) {
             this.gameOver(false);
             alert("YOU LOSE!");
+            // when your base is deroyed, this message will appear
         }
 
         return true;

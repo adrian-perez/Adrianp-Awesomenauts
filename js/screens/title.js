@@ -8,12 +8,14 @@ game.TitleScreen = me.ScreenObject.extend({
                 game.data.option1 = new (me.Renderable.extend({
                     init: function(){
                          this._super(me.Renderable, 'init', [270, 240, 300, 50]);
-                         this.font = new me.Font("Graffiti", 46, "white");
+                         this.font = new me.Font("Arial", 46, "white");
+                         //the font and color of text
                          me.input.registerPointerEvent('pointerdown', this, this.newGame.bind(this), true);
                     },
                     
                     draw: function(renderer){
-                        this.font.draw(renderer.getContext(), "START A NEW GAME", this.pos.x, this.pos.y);
+                        this.font.draw(renderer.getContext(), "Ghetto Awesomenauts\n\Start New Game", this.pos.x, this.pos.y);
+                        //places words on the title screen
                     }, 
                     
                     update: function(dt){
@@ -33,11 +35,13 @@ game.TitleScreen = me.ScreenObject.extend({
                     init: function(){
                          this._super(me.Renderable, 'init', [380, 340, 250, 50]);
                          this.font = new me.Font("Graffiti", 46, "white");
+                         // chooses the color and font of text
                          me.input.registerPointerEvent('pointerdown', this, this.newGame.bind(this), true);
                     },
                     
                     draw: function(renderer){
                         this.font.draw(renderer.getContext(), "CONTINUE", this.pos.x, this.pos.y);
+                        // places words on title screen 
                     }, 
                     
                     update: function(dt){

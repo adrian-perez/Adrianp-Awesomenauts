@@ -1,6 +1,7 @@
 game.PlayerEntity = me.Entity.extend({
     init: function(x, y, settings) {
         this.setSuper(x, y);
+        //this statement is referring to the the function instead of saying function all the time
         this.setPlayerTimers();
         this.setAttributes();
         this.type = "PlayerEntity";
@@ -44,7 +45,7 @@ game.PlayerEntity = me.Entity.extend({
         this.attacking = false;
     },
     addAnimation: function() {
-
+// adding the animation to walk
         this.renderable.addAnimation("idle", [78]);
         this.renderable.addAnimation("walk", [117, 118, 119, 120, 121, 122, 123, 124, 125], 80);
         // the animation to walk
@@ -52,6 +53,7 @@ game.PlayerEntity = me.Entity.extend({
         //the animation to attack
     },
     update: function(delta) {
+        // i have no idea what this line does.
         this.now = new Date().getTime();
         this.dead = this.checkIfDead();
         this.checkKeyPressesAndMove();
@@ -65,6 +67,7 @@ game.PlayerEntity = me.Entity.extend({
     checkIfDead: function() {
 
         if (this.health <= 0) {
+            //making the character die
             return true;
         }
         return false;
@@ -80,11 +83,13 @@ game.PlayerEntity = me.Entity.extend({
         }
 
         if (me.input.isKeyPressed("jump") && !this.jumping && !this.falling) {
+            // making the character jump.
             this.jump();
 
         }
 
         this.attacking = me.input.isKeyPressed("attack");
+        // making the character attack
     },
     
     moveRight: function() {
@@ -92,18 +97,21 @@ game.PlayerEntity = me.Entity.extend({
         //setVelocity is being mutiplied by me.timer.tick;
         //me.timer.tick is making the character move smoothly
         this.body.vel.x += this.body.accel.x * me.timer.tick;
+        // making him move right
         this.facing = "right";
         this.flipX(true);
     },
     
     moveLeft: function() {
         this.facing = "left";
+        // making him move left
         this.body.vel.x -= this.body.accel.x * me.timer.tick;
         this.flipX(false);
     },
     
     jump: function() {
         this.jumping = true;
+        // making him jump
         this.body.vel.y -= this.body.accel.y * me.timer.tick;
     },
     
@@ -111,6 +119,7 @@ game.PlayerEntity = me.Entity.extend({
       if(me.input.isKeyPressed("skill1")){
          //this.speedBurst();
       }else if(me.input.isKeyPressed("skill2")){
+          // making the buy menu say which the skill is
         //this.eatCreep();  
       } else if(me.input.isKeyPressed("skill3")){
          this.throwSpear();
@@ -118,9 +127,10 @@ game.PlayerEntity = me.Entity.extend({
     },
     
     throwSpear: function(){
-        if(this.lastSpear >= game.data.spearTimer && game.data.ability3 >= 0){
+        if((this.now-lastSpear) >= game.data.spearTimer*1000 && game.data.ability3 >= 0){
         this.lastCreep = this.now;
-        var spear = me.pool.pull("spear", this.pos.x, this.pos.y, {});
+        // animation to throw the spear
+        var spear = me.pool.pull("spear", this.pos.x, this.pos.y, {}, this.facing);
         me.game.world.addChild(spear, 10);
     }
         },
@@ -130,13 +140,16 @@ game.PlayerEntity = me.Entity.extend({
             if (!this.renderable.isCurrentAnimation("attack")) {
                 //this code is for the character to attack
                 this.renderable.setCurrentAnimation("attack", "idle");
+                
                 // cuurent animation to attack
                 //goes back to idle animation
                 this.renderable.setAnimationFrame();
             }
         }
         else if (this.body.vel.x !== 0 && !this.renderable.isCurrentAnimation("attack")) {
-            if (!this.renderable.isCurrentAnimation("walk")) {
+            if (!this.renderable.isCurrentAnimation("walk"))
+            {
+                //making him walk
                 this.renderable.setCurrentAnimation("walk");
             }
         } else if (!this.renderable.isCurrentAnimation("attack")) {
@@ -153,6 +166,7 @@ game.PlayerEntity = me.Entity.extend({
     collideWithEnemyBase: function(response) {
         var ydif = this.pos.y - response.b.pos.y;
         var xdif = this.pos.x - response.b.pos.x;
+        // colliding with the enemy base
 
 //            console.log("xdif " + xdif + "ydif " + ydif);
         console.log(xdif + this.facing);
@@ -182,6 +196,7 @@ game.PlayerEntity = me.Entity.extend({
         if (xdif > 0) {
             this.pos.x = this.pos.x + 1;
             if (this.facing === "left") {
+                // left or right direction
                 this.body.vel.x = 0;
             }
         } else {
@@ -194,8 +209,10 @@ game.PlayerEntity = me.Entity.extend({
     checkAttack: function(xdif, ydif, response) {
         if (this.renderable.isCurrentAnimation("attack") && this.now - this.lastHit >= game.data.playerAttackTimer
                 && (Math.abs(ydif) <= 40) &&
+                // checking the attack 
                 (((xdif > 0) && this.facing === "left") || ((xdif < 0) && this.facing === "right"))
                 ) {
+            // checking if he moves left
             this.lastHit = this.now;
             // if the creep's health is less than our attack, execute code in if statement
             return true;
@@ -206,6 +223,7 @@ game.PlayerEntity = me.Entity.extend({
         if (response.b.health <= game.data.playerAttack) {
             // adds 1 gold for evvery creep killed 
             game.data.gold += 1;
+            // checking the hitpoints on the enemy
             console.log("Current gold:: " + game.data.gold);
         }
 
